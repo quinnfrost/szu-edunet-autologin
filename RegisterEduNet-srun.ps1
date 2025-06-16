@@ -125,11 +125,14 @@ function Get-RegisterUri {
 function Get-Ipv4Addr {
     # ipv4 addr of the active interface
     # https://stackoverflow.com/questions/27277701/get-ipv4-address-into-a-variable
+    # fliter for 192.168.145.*
+    # todo: a warning for multiple ipv4 addresses, and a unit test
     return (
         Get-NetIPConfiguration |
         Where-Object {
             $_.IPv4DefaultGateway -ne $null -and
-            $_.NetAdapter.Status -ne "Disconnected"
+            $_.NetAdapter.Status -ne "Disconnected" -and
+            $_.IPv4Address.IPAddress -like "192.168.*"
         }
     ).IPv4Address.IPAddress
 }
